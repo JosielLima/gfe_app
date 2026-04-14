@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Build artifacts
+dist/
+dist-ssr/
+.output/
+.nitro/
+.wrangler/
+.vinxi/
+
+# Environment / secrets
+.env
+.env.local
+*.local
+
+# Framework cache
+.tanstack/
+
+# Generated files
+src/generated/
+src/routeTree.gen.ts
+
+# Misc
+.DS_Store
+__unconfig*
+todos.json
+.cta.json
