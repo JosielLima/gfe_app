@@ -5,24 +5,27 @@
 @theme {
   --font-sans: "Noto Sans", ui-sans-serif, system-ui, sans-serif;
 
-  /* Figma Colors - Semantic Mapping */
-  --color-brand-primary: var(--primary);
-  --color-brand-success: var(--success);
-  --color-brand-error: var(--error);
-  --color-brand-error-bold: var(--error-bold);
-  --color-brand-error-surface: var(--error-surface);
+  /* Brand & Status Roles */
+  --color-primary: var(--primary);
+  --color-success: var(--success);
+  --color-error: var(--error);
+  --color-error-bold: var(--error-bold);
+  --color-error-surface: var(--error-surface);
 
-  --color-text-title: var(--text-title);
-  --color-text-body: var(--text-body);
-  --color-text-muted: var(--text-muted);
-  --color-text-placeholder: var(--text-placeholder);
+  /* Content Roles */
+  --color-title: var(--text-title);
+  --color-body: var(--text-body);
+  --color-muted: var(--text-muted);
+  --color-placeholder: var(--text-placeholder);
 
-  --color-bg-canvas: var(--bg-canvas);
-  --color-bg-subtle: var(--bg-subtle);
-  --color-bg-base: var(--bg-base);
+  /* Surface & Background Roles */
+  --color-canvas: var(--bg-canvas);
+  --color-surface: var(--bg-subtle);
+  --color-page: var(--bg-base);
 
-  --color-border-base: var(--border-base);
-  --color-border-alt: var(--border-alt);
+  /* Border Roles */
+  --color-line: var(--border-base);
+  --color-line-alt: var(--border-alt);
 
   /* Radius & Spacing Tokens */
   --radius-md: 6px;
