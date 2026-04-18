@@ -1,19 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { loginSchema, type LoginSchema } from "#/lib/schemas/auth";
 import { Input } from "#/components/ui/Input";
 
 export const Route = createFileRoute("/login")({
 	component: LoginScreen,
 });
-
-const loginSchema = z.object({
-	email: z.string().email("Please enter a valid email address"),
-	password: z.string().min(6, "Password must be at least 6 characters"),
-});
-
-type LoginSchema = z.infer<typeof loginSchema>;
 
 function LoginScreen() {
 	const {
