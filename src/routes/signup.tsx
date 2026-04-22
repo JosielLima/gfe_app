@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { signupSchema, type SignupSchema } from "#/lib/schemas/auth";
 import { Input } from "#/components/ui/Input";
+import { Check, CircleCheck, X } from "lucide-react";
 
 export const Route = createFileRoute("/signup")({
 	component: SignupScreen,
@@ -12,6 +13,7 @@ function SignupScreen() {
 	const {
 		register,
 		handleSubmit,
+		watch,
 		formState: { errors, isSubmitting },
 	} = useForm<SignupSchema>({
 		resolver: zodResolver(signupSchema),
@@ -22,6 +24,14 @@ function SignupScreen() {
 		// Simulate API call
 		return new Promise((resolve) => setTimeout(resolve, 1500));
 	};
+
+	const passwordValue = watch("password") || "";
+	const passwordCriteria = [
+		{ label: "8 characters minimum", met: passwordValue.length >= 8 },
+		{ label: "One uppercase character", met: /[A-Z]/.test(passwordValue) },
+		{ label: "One number", met: /[0-9]/.test(passwordValue) },
+		{ label: "One special character", met: /[^a-zA-Z0-9]/.test(passwordValue) },
+	];
 
 	return (
 		<div className="flex h-screen bg-page">
@@ -35,21 +45,6 @@ function SignupScreen() {
 					</div>
 
 					<form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
-						<div className="space-y-1.5">
-							<label htmlFor="name" className="text-sm font-medium text-title">
-								Name
-							</label>
-							<Input
-								id="name"
-								type="text"
-								placeholder="John Doe"
-								invalid={!!errors.name}
-								{...register("name")}
-							/>
-							{errors.name && (
-								<p className="text-xs text-error">{errors.name.message}</p>
-							)}
-						</div>
 
 						<div className="space-y-1.5">
 							<label htmlFor="email" className="text-sm font-medium text-title">
@@ -86,13 +81,42 @@ function SignupScreen() {
 							)}
 						</div>
 
+						{/* Password Checklist */}
+						<div className="space-y-2 pt-1 pb-2">
+							{passwordCriteria.map((criterion, index) => (
+								<div key={index} className="flex items-center space-x-2 text-sm">
+									{criterion.met ? (
+										<CircleCheck className="w-5 h-5 fill-green-700 text-white" />
+									) : (
+										<CircleCheck className="w-5 h-5  fill-gray-400 text-white" />
+									)}
+									<span className={criterion.met ? "text-title" : "text-body"}>
+										{criterion.label}
+									</span>
+								</div>
+							))}
+						</div>
+						<div className="flex items-start space-x-3 pt-2 pb-2">
+							<div className="flex h-5 items-center">
+								<input
+									id="subscribe"
+									type="checkbox"
+									className="h-4 w-4 border-2 border-line-alt text-primary focus:ring-primary bg-transparent"
+									{...register("subscribe")}
+								/>
+							</div>
+							<label htmlFor="subscribe" className="text-sm font-medium text-body">
+								I agree with CodePulse <span className="text-primary hover:underline cursor-pointer">Terms of Service</span>
+							</label>
+						</div>
+
 						<div className="space-y-4 pt-2">
 							<button
 								type="submit"
 								disabled={isSubmitting}
 								className="w-full rounded-md bg-primary px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-[var(--lagoon-deep)] disabled:opacity-50 disabled:cursor-not-allowed"
 							>
-								{isSubmitting ? "Creating account..." : "Sign Up"}
+								{isSubmitting ? "Creating account..." : "Create account"}
 							</button>
 
 							<div className="text-center text-sm text-body">
