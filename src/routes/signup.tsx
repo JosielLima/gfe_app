@@ -9,7 +9,7 @@ export const Route = createFileRoute("/signup")({
 	component: SignupScreen,
 });
 
-function SignupScreen() {
+export function SignupScreen() {
 	const {
 		register,
 		handleSubmit,
@@ -44,7 +44,7 @@ function SignupScreen() {
 						</h1>
 					</div>
 
-					<form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
+					<form className="space-y-5" onSubmit={handleSubmit(onSubmit)} noValidate>
 
 						<div className="space-y-1.5">
 							<label htmlFor="email" className="text-sm font-medium text-title">
