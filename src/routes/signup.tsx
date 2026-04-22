@@ -1,23 +1,23 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
+import { signupSchema, type SignupSchema } from "#/lib/schemas/auth";
 import { Input } from "#/components/ui/Input";
-import { type LoginSchema, loginSchema } from "#/lib/schemas/auth";
 
-export const Route = createFileRoute("/login")({
-	component: LoginScreen,
+export const Route = createFileRoute("/signup")({
+	component: SignupScreen,
 });
 
-function LoginScreen() {
+function SignupScreen() {
 	const {
 		register,
 		handleSubmit,
 		formState: { errors, isSubmitting },
-	} = useForm<LoginSchema>({
-		resolver: zodResolver(loginSchema),
+	} = useForm<SignupSchema>({
+		resolver: zodResolver(signupSchema),
 	});
 
-	const onSubmit = (data: LoginSchema) => {
+	const onSubmit = (data: SignupSchema) => {
 		console.log("Form data:", data);
 		// Simulate API call
 		return new Promise((resolve) => setTimeout(resolve, 1500));
@@ -30,11 +30,27 @@ function LoginScreen() {
 				<div className="mx-auto w-full max-w-sm space-y-8">
 					<div>
 						<h1 className="text-3xl font-bold text-title">
-							Log in to your account
+							Create an account
 						</h1>
 					</div>
 
 					<form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
+						<div className="space-y-1.5">
+							<label htmlFor="name" className="text-sm font-medium text-title">
+								Name
+							</label>
+							<Input
+								id="name"
+								type="text"
+								placeholder="John Doe"
+								invalid={!!errors.name}
+								{...register("name")}
+							/>
+							{errors.name && (
+								<p className="text-xs text-error">{errors.name.message}</p>
+							)}
+						</div>
+
 						<div className="space-y-1.5">
 							<label htmlFor="email" className="text-sm font-medium text-title">
 								Email
@@ -76,16 +92,16 @@ function LoginScreen() {
 								disabled={isSubmitting}
 								className="w-full rounded-md bg-primary px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-[var(--lagoon-deep)] disabled:opacity-50 disabled:cursor-not-allowed"
 							>
-								{isSubmitting ? "Logging in..." : "Submit"}
+								{isSubmitting ? "Creating account..." : "Sign Up"}
 							</button>
 
 							<div className="text-center text-sm text-body">
-								Don’t have an account?{" "}
+								Already have an account?{" "}
 								<Link
-									to="/signup"
+									to="/login"
 									className="font-semibold text-primary hover:underline"
 								>
-									Sign up
+									Log in
 								</Link>
 							</div>
 						</div>
@@ -94,10 +110,10 @@ function LoginScreen() {
 			</div>
 
 			{/* Content -> Image */}
-			<div className="hidden w-1/2 bg-page lg:block p-4">
+			<div className="hidden w-1/2 bg-page lg:block  p-4">
 				<img
-					src="/image_login.png"
-					alt="Login visual"
+					src="/image_SingUp.png"
+					alt="Sign up visual"
 					className="h-full w-full object-cover rounded-2xl"
 				/>
 			</div>
