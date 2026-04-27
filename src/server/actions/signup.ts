@@ -1,14 +1,14 @@
-import { createServerFn } from "@tanstack/react-start";
-import { signupSchema } from "#/lib/schemas/auth";
-import { prisma } from "#/db";
-import bcrypt from "bcryptjs";
 import dns from "node:dns";
 import { promisify } from "node:util";
+import { createServerFn } from "@tanstack/react-start";
+import bcrypt from "bcryptjs";
+import { prisma } from "#/db";
+import { signupSchema } from "#/lib/schemas/auth";
 
 const resolveMx = promisify(dns.resolveMx);
 
 export const signupAction = createServerFn({ method: "POST" })
-	.validator((data: unknown) => signupSchema.parse(data))
+	.inputValidator((data: unknown) => signupSchema.parse(data))
 	.handler(async ({ data }) => {
 		// 1. Sanitizar
 		const email = data.email.toLowerCase().trim();
@@ -22,7 +22,9 @@ export const signupAction = createServerFn({ method: "POST" })
 				throw new Error("Este e-mail não parece ser válido (domínio sem MX).");
 			}
 		} catch (error) {
-			throw new Error("Este e-mail não parece ser válido (domínio inacessível).");
+			throw new Error(
+				"Este e-mail não parece ser válido (domínio inacessível).",
+			);
 		}
 
 		// 3. Verificar se email já existe no banco

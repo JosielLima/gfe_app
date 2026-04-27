@@ -17,7 +17,7 @@ export const signupSchema = z.object({
 		.regex(/[A-Z]/, { message: "Must contain at least 1 uppercase letter" })
 		.regex(/[0-9]/, { message: "Must contain at least 1 number" })
 		.regex(/[^a-zA-Z0-9]/, { message: "Must contain at least 1 special character" }),
-	subscribe: z.boolean().optional().refine((v) => v === true, {
+	subscribe: z.literal(true, {
 		message: "Você deve concordar com os Termos de Serviço para criar uma conta.",
 	}),
 });

@@ -50,7 +50,13 @@ Para tarefas com várias etapas, apresente um plano resumido:
 1. [Step] → verify: [check]
 2. [Step] → verify: [check]
 3. [Step] → verify: [check]
-   Critérios de sucesso robustos permitem que você crie ciclos independentes. Critérios fracos ("faça funcionar") exigem esclarecimentos constantes.
+	Critérios de sucesso robustos permitem que você crie ciclos independentes. Critérios fracos ("faça funcionar") exigem esclarecimentos constantes.
+
+5. Verificação Pós-Código (Agent Hook)
+   Sempre que concluir a implementação de código, modificação ou refatoração, você DEVE rodar os seguintes comandos antes de finalizar:
+   - `npm run check` para garantir que a formatação e linting (Biome) estão corretos.
+   - `npx tsc --noEmit` para garantir que nenhum erro de tipagem TypeScript foi introduzido.
+   Isso atua como um "hook" obrigatório em sua rotina de desenvolvimento.
 
 ## Commands
 

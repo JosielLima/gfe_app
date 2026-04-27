@@ -1,9 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { signupSchema, type SignupSchema } from "#/lib/schemas/auth";
 import { Input } from "#/components/ui/Input";
 import { Check, CircleCheck, X } from "lucide-react";
+import { signupAction } from "#/server/actions/signup";
 
 export const Route = createFileRoute("/signup")({
 	component: SignupScreen,
@@ -14,15 +15,24 @@ export function SignupScreen() {
 		register,
 		handleSubmit,
 		watch,
+		setError,
 		formState: { errors, isSubmitting },
 	} = useForm<SignupSchema>({
 		resolver: zodResolver(signupSchema),
 	});
 
-	const onSubmit = (data: SignupSchema) => {
-		console.log("Form data:", data);
-		// Simulate API call
-		return new Promise((resolve) => setTimeout(resolve, 1500));
+	const navigate = useNavigate({ from: "/signup" });
+
+	const onSubmit = async (data: SignupSchema) => {
+		try {
+			await signupAction({ data });
+			navigate({ to: "/" });
+		} catch (err: any) {
+			setError("root.serverError", {
+				type: "manual",
+				message: err.message || "Um erro inesperado ocorreu no servidor.",
+			});
+		}
 	};
 
 	const passwordValue = watch("password") || "";
@@ -45,6 +55,11 @@ export function SignupScreen() {
 					</div>
 
 					<form className="space-y-5" onSubmit={handleSubmit(onSubmit)} noValidate>
+						{errors.root?.serverError && (
+							<div className="p-3 text-sm font-medium text-error bg-red-500/10 border border-red-500/20 rounded-md">
+								{errors.root.serverError.message}
+							</div>
+						)}
 
 						<div className="space-y-1.5">
 							<label htmlFor="email" className="text-sm font-medium text-title">
@@ -96,18 +111,23 @@ export function SignupScreen() {
 								</div>
 							))}
 						</div>
-						<div className="flex items-start space-x-3 pt-2 pb-2">
-							<div className="flex h-5 items-center">
-								<input
-									id="subscribe"
-									type="checkbox"
-									className="h-4 w-4 border-2 border-line-alt text-primary focus:ring-primary bg-transparent"
-									{...register("subscribe")}
-								/>
+						<div className="flex flex-col space-y-1 pt-2 pb-2">
+							<div className="flex items-start space-x-3">
+								<div className="flex h-5 items-center">
+									<input
+										id="subscribe"
+										type="checkbox"
+										className="h-4 w-4 border-2 border-line-alt text-primary focus:ring-primary bg-transparent"
+										{...register("subscribe")}
+									/>
+								</div>
+								<label htmlFor="subscribe" className="text-sm font-medium text-body">
+									I agree with CodePulse <span className="text-primary hover:underline cursor-pointer">Terms of Service</span>
+								</label>
 							</div>
-							<label htmlFor="subscribe" className="text-sm font-medium text-body">
-								I agree with CodePulse <span className="text-primary hover:underline cursor-pointer">Terms of Service</span>
-							</label>
+							{errors.subscribe && (
+								<p className="text-xs text-error">{errors.subscribe.message}</p>
+							)}
 						</div>
 
 						<div className="space-y-4 pt-2">
