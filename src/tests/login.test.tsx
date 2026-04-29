@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { LoginScreen } from "../routes/login";
+import { LoginScreen } from "../pages/LoginScreen";
 
 // Mock TanStack Router
 vi.mock("@tanstack/react-router", () => ({

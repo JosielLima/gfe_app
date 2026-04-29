@@ -1,12 +1,13 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { SignupScreen } from "../routes/signup";
+import { SignupScreen } from "../pages/SignupScreen";
 
 // Mock TanStack Router
 vi.mock("@tanstack/react-router", () => ({
 	createFileRoute: () => () => ({}),
 	Link: ({ children, to }: any) => <a href={to}>{children}</a>,
+	useNavigate: () => vi.fn(),
 }));
 
 describe("SignupScreen", () => {
