@@ -1,9 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useForm } from "react-hook-form";
-import { signupSchema, type SignupSchema } from "#/lib/schemas/auth";
-import { Input } from "#/components/ui/Input";
 import { Check, CircleCheck, X } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { Input } from "#/components/ui/Input";
+import { type SignupSchema, signupSchema } from "#/lib/schemas/auth";
 import { signupAction } from "#/server/actions/signup";
 
 export const Route = createFileRoute("/signup")({
@@ -49,12 +49,14 @@ export function SignupScreen() {
 			<div className="flex w-full flex-col justify-center px-8 lg:w-1/2 md:px-16 lg:px-24 py-8 overflow-y-auto">
 				<div className="mx-auto w-full max-w-sm space-y-8">
 					<div>
-						<h1 className="text-3xl font-bold text-title">
-							Create an account
-						</h1>
+						<h1 className="text-3xl font-bold text-title">Create an account</h1>
 					</div>
 
-					<form className="space-y-5" onSubmit={handleSubmit(onSubmit)} noValidate>
+					<form
+						className="space-y-5"
+						onSubmit={handleSubmit(onSubmit)}
+						noValidate
+					>
 						{errors.root?.serverError && (
 							<div className="p-3 text-sm font-medium text-error bg-red-500/10 border border-red-500/20 rounded-md">
 								{errors.root.serverError.message}
@@ -99,7 +101,10 @@ export function SignupScreen() {
 						{/* Password Checklist */}
 						<div className="space-y-2 pt-1 pb-2">
 							{passwordCriteria.map((criterion, index) => (
-								<div key={index} className="flex items-center space-x-2 text-sm">
+								<div
+									key={index}
+									className="flex items-center space-x-2 text-sm"
+								>
 									{criterion.met ? (
 										<CircleCheck className="w-5 h-5 fill-green-700 text-white" />
 									) : (
@@ -121,8 +126,14 @@ export function SignupScreen() {
 										{...register("subscribe")}
 									/>
 								</div>
-								<label htmlFor="subscribe" className="text-sm font-medium text-body">
-									I agree with CodePulse <span className="text-primary hover:underline cursor-pointer">Terms of Service</span>
+								<label
+									htmlFor="subscribe"
+									className="text-sm font-medium text-body"
+								>
+									I agree with CodePulse{" "}
+									<span className="text-primary hover:underline cursor-pointer">
+										Terms of Service
+									</span>
 								</label>
 							</div>
 							{errors.subscribe && (

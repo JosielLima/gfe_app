@@ -34,7 +34,11 @@ export function LoginScreen() {
 						</h1>
 					</div>
 
-					<form className="space-y-5" onSubmit={handleSubmit(onSubmit)} noValidate>
+					<form
+						className="space-y-5"
+						onSubmit={handleSubmit(onSubmit)}
+						noValidate
+					>
 						<div className="space-y-1.5">
 							<label htmlFor="email" className="text-sm font-medium text-title">
 								Email

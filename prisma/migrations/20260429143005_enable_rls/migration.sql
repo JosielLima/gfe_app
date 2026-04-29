@@ -1,0 +1,3 @@
+-- Enable Row Level Security on tables
+ALTER TABLE "User" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "Todo" ENABLE ROW LEVEL SECURITY;
