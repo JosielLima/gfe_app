@@ -6,15 +6,27 @@ import { Input } from "#/components/ui/Input";
 import { type SignupSchema, signupSchema } from "#/lib/schemas/auth";
 import { signupAction } from "#/server/actions/signup";
 
+import { useToastManager } from "#/components/ui/Toast";
+import { Checkbox } from "#/components/ui/Checkbox";
+import { Controller } from "react-hook-form";
+
 export function SignupScreen() {
+	const toast = useToastManager();
+
 	const {
 		register,
 		handleSubmit,
 		watch,
 		setError,
+		control,
 		formState: { errors, isSubmitting },
 	} = useForm<SignupSchema>({
 		resolver: zodResolver(signupSchema),
+		defaultValues: {
+			email: "",
+			password: "",
+			subscribe: false as unknown as true, // Start as false to trigger validation
+		},
 	});
 
 	const navigate = useNavigate({ from: "/signup" });
@@ -24,9 +36,11 @@ export function SignupScreen() {
 			await signupAction({ data });
 			navigate({ to: "/" });
 		} catch (err: any) {
+			const message = err.message || "Um erro inesperado ocorreu no servidor.";
+			toast.add({ title: message, type: "error" });
 			setError("root.serverError", {
 				type: "manual",
-				message: err.message || "Um erro inesperado ocorreu no servidor.",
+				message,
 			});
 		}
 	};
@@ -53,12 +67,6 @@ export function SignupScreen() {
 						onSubmit={handleSubmit(onSubmit)}
 						noValidate
 					>
-						{errors.root?.serverError && (
-							<div className="p-3 text-sm font-medium text-error bg-red-500/10 border border-red-500/20 rounded-md">
-								{errors.root.serverError.message}
-							</div>
-						)}
-
 						<div className="space-y-1.5">
 							<label htmlFor="email" className="text-sm font-medium text-title">
 								Email
@@ -113,25 +121,29 @@ export function SignupScreen() {
 							))}
 						</div>
 						<div className="flex flex-col space-y-1 pt-2 pb-2">
-							<div className="flex items-start space-x-3">
+							<label className="flex items-start space-x-3 cursor-pointer group">
 								<div className="flex h-5 items-center">
-									<input
-										id="subscribe"
-										type="checkbox"
-										className="h-4 w-4 border-2 border-line-alt text-primary focus:ring-primary bg-transparent"
-										{...register("subscribe")}
+									<Controller
+										name="subscribe"
+										control={control}
+										render={({ field }) => (
+											<Checkbox
+												id="subscribe"
+												checked={field.value}
+												onCheckedChange={field.onChange}
+												onBlur={field.onBlur}
+												ref={field.ref}
+											/>
+										)}
 									/>
 								</div>
-								<label
-									htmlFor="subscribe"
-									className="text-sm font-medium text-body"
-								>
+								<div className="text-sm font-medium text-body select-none">
 									I agree with CodePulse{" "}
-									<span className="text-primary hover:underline cursor-pointer">
+									<span className="text-primary hover:underline font-semibold">
 										Terms of Service
 									</span>
-								</label>
-							</div>
+								</div>
+							</label>
 							{errors.subscribe && (
 								<p className="text-xs text-error">{errors.subscribe.message}</p>
 							)}

@@ -24,7 +24,7 @@ function App() {
 				<h1 className="display-title mb-5 max-w-3xl text-4xl leading-[1.02] font-bold tracking-tight sm:text-6xl">
 					Bem-vindo de volta, <span className="text-primary">{user.email}</span>
 				</h1>
-				
+
 				<button
 					type="button"
 					onClick={() => logoutMutation.mutate()}

@@ -4,7 +4,11 @@ import { useForm } from "react-hook-form";
 import { Input } from "#/components/ui/Input";
 import { type LoginSchema, loginSchema } from "#/lib/schemas/auth";
 import { loginAction } from "#/server/actions/login";
+import { useToastManager } from "#/components/ui/Toast";
+
 export function LoginScreen() {
+	const toast = useToastManager();
+
 	const {
 		register,
 		handleSubmit,
@@ -21,9 +25,11 @@ export function LoginScreen() {
 			await loginAction({ data });
 			navigate({ to: "/" });
 		} catch (err: any) {
+			const message = err.message || "E-mail ou senha incorretos.";
+			toast.add({ title: message, type: "error" });
 			setError("root.serverError", {
 				type: "manual",
-				message: err.message || "E-mail ou senha incorretos.",
+				message,
 			});
 		}
 	};
@@ -44,11 +50,6 @@ export function LoginScreen() {
 						onSubmit={handleSubmit(onSubmit)}
 						noValidate
 					>
-						{errors.root?.serverError && (
-							<div className="p-3 text-sm font-medium text-error bg-red-500/10 border border-red-500/20 rounded-md">
-								{errors.root.serverError.message}
-							</div>
-						)}
 						<div className="space-y-1.5">
 							<label htmlFor="email" className="text-sm font-medium text-title">
 								Email
