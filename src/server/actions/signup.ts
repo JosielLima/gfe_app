@@ -5,6 +5,7 @@ import { setResponseStatus } from "@tanstack/react-start/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "#/db";
 import { signupSchema } from "#/lib/schemas/auth";
+import { createSession, setSessionCookie } from "#/server/auth/session";
 
 const resolveMx = promisify(dns.resolveMx);
 
@@ -43,12 +44,15 @@ export const signupAction = createServerFn({ method: "POST" })
 		const hashedPassword = await bcrypt.hash(password, saltRounds);
 
 		// 4. Criar usuário no banco
-		await prisma.user.create({
+		const user = await prisma.user.create({
 			data: {
 				email,
 				password: hashedPassword,
 			},
 		});
+
+		const session = await createSession(user.id);
+		setSessionCookie(session.id);
 
 		return { success: true };
 	});

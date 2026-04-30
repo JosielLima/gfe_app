@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import bcrypt from "bcryptjs";
 import { prisma } from "#/db";
 import { loginSchema } from "#/lib/schemas/auth";
+import { createSession, setSessionCookie } from "#/server/auth/session";
 
 export const loginAction = createServerFn({ method: "POST" })
 	.inputValidator((data: unknown) => loginSchema.parse(data))
@@ -22,6 +23,9 @@ export const loginAction = createServerFn({ method: "POST" })
 		if (!isValidPassword) {
 			throw new Error("E-mail ou senha incorretos.");
 		}
+
+		const session = await createSession(user.id);
+		setSessionCookie(session.id);
 
 		return { success: true };
 	});
