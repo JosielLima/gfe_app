@@ -1,22 +1,31 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { Input } from "#/components/ui/Input";
 import { type LoginSchema, loginSchema } from "#/lib/schemas/auth";
-
+import { loginAction } from "#/server/actions/login";
 export function LoginScreen() {
 	const {
 		register,
 		handleSubmit,
+		setError,
 		formState: { errors, isSubmitting },
 	} = useForm<LoginSchema>({
 		resolver: zodResolver(loginSchema),
 	});
 
-	const onSubmit = (data: LoginSchema) => {
-		console.log("Form data:", data);
-		// Simulate API call
-		return new Promise((resolve) => setTimeout(resolve, 1500));
+	const navigate = useNavigate({ from: "/login" });
+
+	const onSubmit = async (data: LoginSchema) => {
+		try {
+			await loginAction({ data });
+			navigate({ to: "/" });
+		} catch (err: any) {
+			setError("root.serverError", {
+				type: "manual",
+				message: err.message || "E-mail ou senha incorretos.",
+			});
+		}
 	};
 
 	return (
@@ -35,6 +44,11 @@ export function LoginScreen() {
 						onSubmit={handleSubmit(onSubmit)}
 						noValidate
 					>
+						{errors.root?.serverError && (
+							<div className="p-3 text-sm font-medium text-error bg-red-500/10 border border-red-500/20 rounded-md">
+								{errors.root.serverError.message}
+							</div>
+						)}
 						<div className="space-y-1.5">
 							<label htmlFor="email" className="text-sm font-medium text-title">
 								Email

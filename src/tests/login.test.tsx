@@ -2,11 +2,18 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { LoginScreen } from "../pages/LoginScreen";
+import { loginAction } from "#/server/actions/login";
 
 // Mock TanStack Router
 vi.mock("@tanstack/react-router", () => ({
 	createFileRoute: () => () => ({}),
 	Link: ({ children, to }: any) => <a href={to}>{children}</a>,
+	useNavigate: () => vi.fn(),
+}));
+
+// Mock Server Actions
+vi.mock("#/server/actions/login", () => ({
+	loginAction: vi.fn(),
 }));
 
 describe("LoginScreen", () => {
@@ -71,5 +78,26 @@ describe("LoginScreen", () => {
 			},
 			{ timeout: 2000 },
 		);
+	});
+
+	it("shows generic server error on login failure", async () => {
+		const user = userEvent.setup();
+		vi.mocked(loginAction).mockRejectedValueOnce(
+			new Error("E-mail ou senha incorretos."),
+		);
+
+		render(<LoginScreen />);
+
+		const emailInput = screen.getByLabelText(/Email/i);
+		const passwordInput = screen.getByLabelText(/Password/i);
+		const submitButton = screen.getByRole("button", { name: /Submit/i });
+
+		await user.type(emailInput, "test@example.com");
+		await user.type(passwordInput, "wrongpassword");
+		await user.click(submitButton);
+
+		expect(
+			await screen.findByText("E-mail ou senha incorretos."),
+		).toBeInTheDocument();
 	});
 });
