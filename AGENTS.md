@@ -58,6 +58,12 @@ Para tarefas com várias etapas, apresente um plano resumido:
    - `npx tsc --noEmit` para garantir que nenhum erro de tipagem TypeScript foi introduzido.
      Isso atua como um "hook" obrigatório em sua rotina de desenvolvimento.
 
+## Convenções de Código
+
+- **Zod:** Use sempre `z.email()` para validação de e-mails. O uso de `z.string().email()` está **depreciado** e causa avisos de tipo. Mantenha a consistência em todos os schemas.
+- **Normalização:** Prefira fazer `.trim().toLowerCase()` diretamente no schema Zod usando métodos encadeados, em vez de sanitização manual em server functions.
+
+
 ## Commands
 
 ```bash
@@ -129,6 +135,5 @@ TanStack Devtools (Router + Query) are mounted in the root shell and only active
 ### Sessão: Criação da tela de Sign Up e Correção de Rotas
 
 - **Sincronização de Rotas (TanStack Router):** Ao criar novas rotas (ex: `signup.tsx`), o TypeScript pode acusar erro no componente `<Link to="/signup">`. Isso ocorre porque o arquivo `routeTree.gen.ts` ainda não foi atualizado. **Sempre verifique se o comando `npm run dev` está rodando** para regenerar os tipos das rotas automaticamente.
-- **Uso do Zod:** Prefira usar `z.email()` em vez de `z.string().email()` para evitar avisos de depreciação, mantendo a consistência em todos os schemas de autenticação.
 - **Importação de Componentes:** Ao substituir âncoras (`<a>`) por `<Link>`, lembre-se sempre de adicionar o import de `Link` do `@tanstack/react-router`.
 - **Consistência de Layout:** Para novas telas de autenticação, espelhe a estrutura de classes e o comportamento responsivo de telas existentes (como a `login.tsx`) para garantir que o design system seja respeitado sem erros visuais.

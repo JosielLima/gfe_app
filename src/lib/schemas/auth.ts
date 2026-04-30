@@ -11,7 +11,6 @@ export type LoginSchema = z.infer<typeof loginSchema>;
 
 export const signupSchema = z.object({
 	email: z
-		.string()
 		.email({ message: "Please enter a valid email address" })
 		.trim()
 		.toLowerCase(),
