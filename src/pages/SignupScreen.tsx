@@ -1,14 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { CircleCheck } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import { Checkbox } from "#/components/ui/Checkbox";
 import { Input } from "#/components/ui/Input";
-import { type SignupSchema, signupSchema } from "#/lib/schemas/auth";
-import { signupAction } from "#/server/actions/signup";
 
 import { useToastManager } from "#/components/ui/Toast";
-import { Checkbox } from "#/components/ui/Checkbox";
-import { Controller } from "react-hook-form";
+import { type SignupSchema, signupSchema } from "#/lib/schemas/auth";
+import { signupAction } from "#/server/actions/signup";
 
 export function SignupScreen() {
 	const toast = useToastManager();
@@ -35,8 +34,11 @@ export function SignupScreen() {
 		try {
 			await signupAction({ data });
 			navigate({ to: "/" });
-		} catch (err: any) {
-			const message = err.message || "Um erro inesperado ocorreu no servidor.";
+		} catch (err: unknown) {
+			const message =
+				err instanceof Error
+					? err.message
+					: "Um erro inesperado ocorreu no servidor.";
 			toast.add({ title: message, type: "error" });
 			setError("root.serverError", {
 				type: "manual",
@@ -104,9 +106,9 @@ export function SignupScreen() {
 
 						{/* Password Checklist */}
 						<div className="space-y-2 pt-1 pb-2">
-							{passwordCriteria.map((criterion, index) => (
+							{passwordCriteria.map((criterion) => (
 								<div
-									key={index}
+									key={criterion.label}
 									className="flex items-center space-x-2 text-sm"
 								>
 									{criterion.met ? (
@@ -121,7 +123,10 @@ export function SignupScreen() {
 							))}
 						</div>
 						<div className="flex flex-col space-y-1 pt-2 pb-2">
-							<label className="flex items-start space-x-3 cursor-pointer group">
+							<label
+								htmlFor="subscribe"
+								className="flex items-start space-x-3 cursor-pointer group"
+							>
 								<div className="flex h-5 items-center">
 									<Controller
 										name="subscribe"
@@ -153,7 +158,7 @@ export function SignupScreen() {
 							<button
 								type="submit"
 								disabled={isSubmitting}
-								className="w-full rounded-md bg-primary px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-[var(--lagoon-deep)] disabled:opacity-50 disabled:cursor-not-allowed"
+								className="w-full rounded-md bg-primary px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-(--lagoon-deep) disabled:opacity-50 disabled:cursor-not-allowed"
 							>
 								{isSubmitting ? "Creating account..." : "Create account"}
 							</button>

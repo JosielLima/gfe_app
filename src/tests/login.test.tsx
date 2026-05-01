@@ -1,13 +1,15 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { LoginScreen } from "../pages/LoginScreen";
 import { loginAction } from "#/server/actions/login";
+import { LoginScreen } from "../pages/LoginScreen";
 
 // Mock TanStack Router
 vi.mock("@tanstack/react-router", () => ({
 	createFileRoute: () => () => ({}),
-	Link: ({ children, to }: any) => <a href={to}>{children}</a>,
+	Link: ({ children, to }: { children: React.ReactNode; to: string }) => (
+		<a href={to}>{children}</a>
+	),
 	useNavigate: () => vi.fn(),
 }));
 

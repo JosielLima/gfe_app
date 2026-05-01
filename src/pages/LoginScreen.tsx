@@ -2,9 +2,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { Input } from "#/components/ui/Input";
+import { useToastManager } from "#/components/ui/Toast";
 import { type LoginSchema, loginSchema } from "#/lib/schemas/auth";
 import { loginAction } from "#/server/actions/login";
-import { useToastManager } from "#/components/ui/Toast";
 
 export function LoginScreen() {
 	const toast = useToastManager();
@@ -24,8 +24,9 @@ export function LoginScreen() {
 		try {
 			await loginAction({ data });
 			navigate({ to: "/" });
-		} catch (err: any) {
-			const message = err.message || "E-mail ou senha incorretos.";
+		} catch (err: unknown) {
+			const message =
+				err instanceof Error ? err.message : "E-mail ou senha incorretos.";
 			toast.add({ title: message, type: "error" });
 			setError("root.serverError", {
 				type: "manual",
@@ -89,7 +90,7 @@ export function LoginScreen() {
 							<button
 								type="submit"
 								disabled={isSubmitting}
-								className="w-full rounded-md bg-primary px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-[var(--lagoon-deep)] disabled:opacity-50 disabled:cursor-not-allowed"
+								className="w-full rounded-md bg-primary px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-(--lagoon-deep) disabled:opacity-50 disabled:cursor-not-allowed"
 							>
 								{isSubmitting ? "Logging in..." : "Submit"}
 							</button>

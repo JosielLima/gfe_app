@@ -1,4 +1,4 @@
-import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { getAuthUser } from "#/server/actions/auth";
 
 export const Route = createFileRoute("/_authenticated")({
@@ -23,9 +23,5 @@ export const Route = createFileRoute("/_authenticated")({
 });
 
 function AuthenticatedLayout() {
-	return (
-		<>
-			<Outlet />
-		</>
-	);
+	return <Outlet />;
 }
