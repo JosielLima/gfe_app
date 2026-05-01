@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { CircleCheck } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
@@ -18,7 +19,7 @@ export function SignupScreen() {
 		watch,
 		setError,
 		control,
-		formState: { errors, isSubmitting },
+		formState: { errors },
 	} = useForm<SignupSchema>({
 		resolver: zodResolver(signupSchema),
 		defaultValues: {
@@ -30,21 +31,31 @@ export function SignupScreen() {
 
 	const navigate = useNavigate({ from: "/signup" });
 
-	const onSubmit = async (data: SignupSchema) => {
-		try {
-			await signupAction({ data });
+	const signupMutation = useMutation({
+		mutationFn: (data: SignupSchema) => signupAction({ data }),
+		onSuccess: () => {
 			navigate({ to: "/" });
-		} catch (err: unknown) {
+		},
+		onError: (err: any) => {
+			console.error("Signup Mutation Error:", err);
 			const message =
-				err instanceof Error
-					? err.message
-					: "Um erro inesperado ocorreu no servidor.";
+				err?.message ||
+				err?.data?.message ||
+				err?.response?.data?.message ||
+				(typeof err === "string"
+					? err
+					: "Um erro inesperado ocorreu no servidor.");
+
 			toast.add({ title: message, type: "error" });
 			setError("root.serverError", {
 				type: "manual",
 				message,
 			});
-		}
+		},
+	});
+
+	const onSubmit = (data: SignupSchema) => {
+		signupMutation.mutate(data);
 	};
 
 	const passwordValue = watch("password") || "";
@@ -157,10 +168,20 @@ export function SignupScreen() {
 						<div className="space-y-4 pt-2">
 							<button
 								type="submit"
-								disabled={isSubmitting}
+								disabled={signupMutation.isPending}
 								className="w-full rounded-md bg-primary px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-(--lagoon-deep) disabled:opacity-50 disabled:cursor-not-allowed"
 							>
-								{isSubmitting ? "Creating account..." : "Create account"}
+								{signupMutation.isPending
+									? "Creating account..."
+									: "Create account"}
+							</button>
+
+							<button
+								type="button"
+								onClick={() => toast.add({ title: "Test Toast", type: "error" })}
+								className="w-full rounded-md bg-red-500 px-4 py-3 text-sm font-medium text-white transition-colors mt-2"
+							>
+								Test Toast
 							</button>
 
 							<div className="text-center text-sm text-body">

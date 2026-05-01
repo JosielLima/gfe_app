@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { Input } from "#/components/ui/Input";
@@ -13,26 +14,36 @@ export function LoginScreen() {
 		register,
 		handleSubmit,
 		setError,
-		formState: { errors, isSubmitting },
+		formState: { errors },
 	} = useForm<LoginSchema>({
 		resolver: zodResolver(loginSchema),
 	});
 
 	const navigate = useNavigate({ from: "/login" });
 
-	const onSubmit = async (data: LoginSchema) => {
-		try {
-			await loginAction({ data });
+	const loginMutation = useMutation({
+		mutationFn: (data: LoginSchema) => loginAction({ data }),
+		onSuccess: () => {
 			navigate({ to: "/" });
-		} catch (err: unknown) {
+		},
+		onError: (err: any) => {
+			console.error("Login Mutation Error:", err);
 			const message =
-				err instanceof Error ? err.message : "E-mail ou senha incorretos.";
+				err?.message ||
+				err?.data?.message ||
+				err?.response?.data?.message ||
+				(typeof err === "string" ? err : "E-mail ou senha incorretos.");
+
 			toast.add({ title: message, type: "error" });
 			setError("root.serverError", {
 				type: "manual",
 				message,
 			});
-		}
+		},
+	});
+
+	const onSubmit = (data: LoginSchema) => {
+		loginMutation.mutate(data);
 	};
 
 	return (
@@ -89,10 +100,10 @@ export function LoginScreen() {
 						<div className="space-y-4 pt-2">
 							<button
 								type="submit"
-								disabled={isSubmitting}
+								disabled={loginMutation.isPending}
 								className="w-full rounded-md bg-primary px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-(--lagoon-deep) disabled:opacity-50 disabled:cursor-not-allowed"
 							>
-								{isSubmitting ? "Logging in..." : "Submit"}
+								{loginMutation.isPending ? "Logging in..." : "Submit"}
 							</button>
 
 							<div className="text-center text-sm text-body">
