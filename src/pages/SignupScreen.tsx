@@ -36,14 +36,19 @@ export function SignupScreen() {
 		onSuccess: () => {
 			navigate({ to: "/" });
 		},
-		onError: (err: any) => {
-			console.error("Signup Mutation Error:", err);
+		onError: (error: unknown) => {
+			console.error("Signup Mutation Error:", error);
+			const err = error as {
+				message?: string;
+				data?: { message?: string };
+				response?: { data?: { message?: string } };
+			};
 			const message =
 				err?.message ||
 				err?.data?.message ||
 				err?.response?.data?.message ||
-				(typeof err === "string"
-					? err
+				(typeof error === "string"
+					? error
 					: "An unexpected server error occurred.");
 
 			toast.add({ title: message, type: "error" });

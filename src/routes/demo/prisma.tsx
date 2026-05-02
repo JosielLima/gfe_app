@@ -70,8 +70,8 @@ function DemoPrisma() {
 					}}
 				>
 					<div className="relative group">
-						<div className="absolute -inset-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 rounded-lg blur-lg opacity-60 group-hover:opacity-100 transition duration-500"></div>
-						<div className="relative bg-gradient-to-br from-indigo-600 to-purple-600 p-3 rounded-lg">
+						<div className="absolute -inset-2 bg-linear-to-r from-indigo-500 via-purple-500 to-indigo-500 rounded-lg blur-lg opacity-60 group-hover:opacity-100 transition duration-500"></div>
+						<div className="relative bg-linear-to-br from-indigo-600 to-purple-600 p-3 rounded-lg">
 							<img
 								src="/prisma.svg"
 								alt="Prisma Logo"
@@ -79,7 +79,7 @@ function DemoPrisma() {
 							/>
 						</div>
 					</div>
-					<h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-300 via-purple-300 to-indigo-300 text-transparent bg-clip-text">
+					<h1 className="text-3xl font-bold bg-linear-to-r from-indigo-300 via-purple-300 to-indigo-300 text-transparent bg-clip-text">
 						Demonstração do Banco de Dados Prisma
 					</h1>
 				</div>

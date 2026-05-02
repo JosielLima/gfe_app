@@ -137,3 +137,9 @@ TanStack Devtools (Router + Query) are mounted in the root shell and only active
 - **Sincronização de Rotas (TanStack Router):** Ao criar novas rotas (ex: `signup.tsx`), o TypeScript pode acusar erro no componente `<Link to="/signup">`. Isso ocorre porque o arquivo `routeTree.gen.ts` ainda não foi atualizado. **Sempre verifique se o comando `npm run dev` está rodando** para regenerar os tipos das rotas automaticamente.
 - **Importação de Componentes:** Ao substituir âncoras (`<a>`) por `<Link>`, lembre-se sempre de adicionar o import de `Link` do `@tanstack/react-router`.
 - **Consistência de Layout:** Para novas telas de autenticação, espelhe a estrutura de classes e o comportamento responsivo de telas existentes (como a `login.tsx`) para garantir que o design system seja respeitado sem erros visuais.
+
+### Sessão: Correção de Linting e Tipagem em Mutações
+
+- **Classes Tailwind v4:** Substitua classes legadas de gradiente (`bg-gradient-to-*`) por utilitários modernos (`bg-linear-to-*`). Além disso, não utilize valores arbitrários desnecessários como `z-[100]`, prefira `z-100`. A classe `flex-shrink-0` também foi simplificada para `shrink-0`.
+- **Tipagem em TanStack Query (`onError`):** Evite o uso de `any` (como `onError: (err: any) => {...}`). Utilize `error: unknown` e faça um cast seguro (ex: `const err = error as { message?: string, ... }`) para acessar propriedades da resposta de erro de forma a manter a segurança de tipos e não gerar avisos (warnings) no linter.
+- **Sincronização do Biome CLI:** Caso o `npm run check` (biome) alerte sobre divergências na versão do schema (`biome.json`), execute `npx biome migrate --write` para atualizá-lo automaticamente para a versão correspondente do CLI instalado.

@@ -26,13 +26,18 @@ export function LoginScreen() {
 		onSuccess: () => {
 			navigate({ to: "/" });
 		},
-		onError: (err: any) => {
-			console.error("Login Mutation Error:", err);
+		onError: (error: unknown) => {
+			console.error("Login Mutation Error:", error);
+			const err = error as {
+				message?: string;
+				data?: { message?: string };
+				response?: { data?: { message?: string } };
+			};
 			const message =
 				err?.message ||
 				err?.data?.message ||
 				err?.response?.data?.message ||
-				(typeof err === "string" ? err : "Incorrect email or password.");
+				(typeof error === "string" ? error : "Incorrect email or password.");
 
 			toast.add({ title: message, type: "error" });
 			setError("root.serverError", {

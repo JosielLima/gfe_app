@@ -18,7 +18,7 @@ export function Toasts() {
 	if (!mounted) return null;
 
 	return (
-		<div className="fixed top-10 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2 pointer-events-none">
+		<div className="fixed top-10 left-1/2 -translate-x-1/2 z-100 flex flex-col items-center gap-2 pointer-events-none">
 			{toasts.map(
 				(toast: {
 					id: string;
@@ -60,7 +60,7 @@ export function Toasts() {
 								type="button"
 								onClick={() => close(toast.id)}
 								className={cn(
-									"p-0.5 rounded-md hover:bg-black/5 transition-colors cursor-pointer flex-shrink-0",
+									"p-0.5 rounded-md hover:bg-black/5 transition-colors cursor-pointer shrink-0",
 									toast.type === "error" ? "text-red-800" : "text-green-800",
 								)}
 							>
