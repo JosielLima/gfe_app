@@ -13,6 +13,7 @@
     "format": "biome format",
     "lint": "biome lint",
     "check": "biome check",
+    "postinstall": "prisma generate",
     "post-cta-init": "npx -y create-db@latest --user-agent tanstack/tsrouter",
     "db:generate": "dotenv -e .env.local -- prisma generate",
     "db:push": "dotenv -e .env.local -- prisma db push",
