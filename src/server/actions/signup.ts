@@ -36,7 +36,7 @@ export const signupAction = createServerFn({ method: "POST" })
 
 		if (existingUser) {
 			setResponseStatus(409); // Conflict
-			throw new Error("A conta já existe. Deseja fazer login?");
+			throw new Error("Account already exists. Sign in instead?");
 		}
 
 		// 3. Hash da senha com bcryptjs

@@ -32,7 +32,7 @@ export function LoginScreen() {
 				err?.message ||
 				err?.data?.message ||
 				err?.response?.data?.message ||
-				(typeof err === "string" ? err : "E-mail ou senha incorretos.");
+				(typeof err === "string" ? err : "Incorrect email or password.");
 
 			toast.add({ title: message, type: "error" });
 			setError("root.serverError", {

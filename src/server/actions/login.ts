@@ -15,13 +15,13 @@ export const loginAction = createServerFn({ method: "POST" })
 		});
 
 		if (!user) {
-			throw new Error("E-mail ou senha incorretos.");
+			throw new Error("Incorrect email or password.");
 		}
 
 		const isValidPassword = await bcrypt.compare(password, user.password);
 
 		if (!isValidPassword) {
-			throw new Error("E-mail ou senha incorretos.");
+			throw new Error("Incorrect email or password.");
 		}
 
 		const session = await createSession(user.id);

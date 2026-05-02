@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { CircleCheck } from "lucide-react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, type FieldErrors, useForm } from "react-hook-form";
 import { Checkbox } from "#/components/ui/Checkbox";
 import { Input } from "#/components/ui/Input";
 
@@ -44,7 +44,7 @@ export function SignupScreen() {
 				err?.response?.data?.message ||
 				(typeof err === "string"
 					? err
-					: "Um erro inesperado ocorreu no servidor.");
+					: "An unexpected server error occurred.");
 
 			toast.add({ title: message, type: "error" });
 			setError("root.serverError", {
@@ -56,6 +56,15 @@ export function SignupScreen() {
 
 	const onSubmit = (data: SignupSchema) => {
 		signupMutation.mutate(data);
+	};
+
+	const onInvalid = (errors: FieldErrors<SignupSchema>) => {
+		if (errors.subscribe) {
+			toast.add({
+				title: "You must agree to the Terms of Service to create an account.",
+				type: "error",
+			});
+		}
 	};
 
 	const passwordValue = watch("password") || "";
@@ -77,7 +86,7 @@ export function SignupScreen() {
 
 					<form
 						className="space-y-5"
-						onSubmit={handleSubmit(onSubmit)}
+						onSubmit={handleSubmit(onSubmit, onInvalid)}
 						noValidate
 					>
 						<div className="space-y-1.5">
@@ -178,7 +187,9 @@ export function SignupScreen() {
 
 							<button
 								type="button"
-								onClick={() => toast.add({ title: "Test Toast", type: "error" })}
+								onClick={() =>
+									toast.add({ title: "Test Toast", type: "error" })
+								}
 								className="w-full rounded-md bg-red-500 px-4 py-3 text-sm font-medium text-white transition-colors mt-2"
 							>
 								Test Toast
