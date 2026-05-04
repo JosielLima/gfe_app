@@ -20,12 +20,14 @@ export const signupAction = createServerFn({ method: "POST" })
 			const records = await resolveMx(domain);
 			if (!records || records.length === 0) {
 				setResponseStatus(400);
-				throw new Error("Este e-mail não parece ser válido (domínio sem MX).");
+				throw new Error(
+					"This email does not seem to be valid (domain without MX).",
+				);
 			}
 		} catch (_error) {
 			setResponseStatus(400);
 			throw new Error(
-				"Este e-mail não parece ser válido (domínio inacessível).",
+				"This email does not seem to be valid (domain inaccessible).",
 			);
 		}
 

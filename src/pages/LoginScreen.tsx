@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { Input } from "#/components/ui/Input";
+import { PasswordInput } from "#/components/ui/PasswordInput";
 import { useToastManager } from "#/components/ui/Toast";
 import { type LoginSchema, loginSchema } from "#/lib/schemas/auth";
 import { loginAction } from "#/server/actions/login";
@@ -90,9 +91,8 @@ export function LoginScreen() {
 							>
 								Password
 							</label>
-							<Input
+							<PasswordInput
 								id="password"
-								type="password"
 								placeholder="**********"
 								invalid={!!errors.password}
 								{...register("password")}

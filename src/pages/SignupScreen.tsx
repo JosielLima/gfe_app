@@ -5,6 +5,7 @@ import { CircleCheck } from "lucide-react";
 import { Controller, type FieldErrors, useForm } from "react-hook-form";
 import { Checkbox } from "#/components/ui/Checkbox";
 import { Input } from "#/components/ui/Input";
+import { PasswordInput } from "#/components/ui/PasswordInput";
 
 import { useToastManager } from "#/components/ui/Toast";
 import { type SignupSchema, signupSchema } from "#/lib/schemas/auth";
@@ -22,10 +23,11 @@ export function SignupScreen() {
 		formState: { errors },
 	} = useForm<SignupSchema>({
 		resolver: zodResolver(signupSchema),
+		mode: "onBlur",
 		defaultValues: {
 			email: "",
 			password: "",
-			subscribe: false as unknown as true, // Start as false to trigger validation
+			subscribe: false,
 		},
 	});
 
@@ -74,10 +76,23 @@ export function SignupScreen() {
 
 	const passwordValue = watch("password") || "";
 	const passwordCriteria = [
-		{ label: "8 characters minimum", met: passwordValue.length >= 8 },
-		{ label: "One uppercase character", met: /[A-Z]/.test(passwordValue) },
+		{
+			label: "8 - 64 characters",
+			met: passwordValue.length >= 8 && passwordValue.length <= 64,
+		},
+		{
+			label: "One uppercase character",
+			met: /[A-Z]/.test(passwordValue),
+		},
+		{
+			label: "One lowercase character",
+			met: /[a-z]/.test(passwordValue),
+		},
 		{ label: "One number", met: /[0-9]/.test(passwordValue) },
-		{ label: "One special character", met: /[^a-zA-Z0-9]/.test(passwordValue) },
+		{
+			label: "One special character",
+			met: /[^a-zA-Z0-9]/.test(passwordValue),
+		},
 	];
 
 	return (
@@ -117,9 +132,8 @@ export function SignupScreen() {
 							>
 								Password
 							</label>
-							<Input
+							<PasswordInput
 								id="password"
-								type="password"
 								placeholder="**********"
 								invalid={!!errors.password}
 								{...register("password")}
@@ -188,16 +202,6 @@ export function SignupScreen() {
 								{signupMutation.isPending
 									? "Creating account..."
 									: "Create account"}
-							</button>
-
-							<button
-								type="button"
-								onClick={() =>
-									toast.add({ title: "Test Toast", type: "error" })
-								}
-								className="w-full rounded-md bg-red-500 px-4 py-3 text-sm font-medium text-white transition-colors mt-2"
-							>
-								Test Toast
 							</button>
 
 							<div className="text-center text-sm text-body">
